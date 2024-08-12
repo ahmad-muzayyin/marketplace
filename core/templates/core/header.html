@@ -1,0 +1,50 @@
+{% load static %}
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+{% comment %} logo header {% endcomment %}
+    <img src="{% static '/assets/img/logochikook.png' %}" width="100" height="50" alt=""> 
+    <a class="navbar-brand" href="#"></a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'home' %}">Home</a>
+            </li>
+           
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="kategoriDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Kategori
+                </a>
+                <div class="dropdown-menu" aria-labelledby="kategoriDropdown">
+                    {% for kategori in daftar_kategori %}
+                        <!-- <a class="dropdown-item" href="#">{{ kategori.nama }}</a> -->
+                        <a class="dropdown-item" href="{% url 'produk_by_kategori' kategori.id %}">{{ kategori.nama }}</a>
+                    {% endfor %}
+                </div>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'keranjang' %}">Keranjang</a>
+            </li>
+            <ul class="navbar-nav">
+                {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'profile' %}">Profile</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'transaction_history' %}">Histori Transaksi</a>
+                    </li>
+                    
+                    
+                {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'login' %}">Login</a>
+                    </li>
+                    {% comment %} <li class="nav-item">
+                        <a class="nav-link" href="{% url 'register' %}">Register</a>
+                    </li> {% endcomment %}
+                {% endif %}
+            </ul>
+        </ul>
+    </div>
+</nav>

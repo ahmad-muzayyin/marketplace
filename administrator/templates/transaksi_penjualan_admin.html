@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="content">
+<div class="container-fluid">
+
+    <div class="row">
+        <div class="col-12 col-md-12 col-lg-12 col-xl-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title d-inline-block">{{ judul }}</h4>
+                </div>
+                <div class="card-block">
+                    <div class="col-md-12">
+                        <form method="GET">
+                            <div class="form-row">
+                                <div class="form-group col-md-4">
+                                    <input type="text" class="form-control" name="q" value="{{ query|default:'' }}" placeholder="Cari berdasarkan nama Outlet">
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <input type="month" class="form-control" name="bulan" value="{{ bulan }}">
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <button type="submit" class="btn btn-primary">Cari</button>
+                                </div>
+                            </div>
+                        </form>
+                        <div class="card">
+                            <div class="card-body table-responsive p-0">
+                                <table class="table table-hover text-nowrap table-sm text-xsmall" style="font-size: 12px;">
+                                    <thead>
+                                        <tr>
+                                            <th><center>No</center></th>
+                                            <th>Pelanggan</th>
+                                            <th>No. Transaksi</th>
+                                            <th>Total Transaksi</th>
+                                            <th>Status</th>
+                                            <th>Tanggal Penjualan</th>
+                                            <th>Aksi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for penjualan in penjualan_list %}
+                                            <tr>
+                                                <td><center>{{ forloop.counter }}</center></td>
+                                                <td>{{ penjualan.customer.name }}</td>
+                                                <td>{{ penjualan.no_transaksi }}</td>
+                                                <td>{{ penjualan.total_transaksi }}</td>
+                                                <td>{{ penjualan.status }}</td>
+                                                <td>{{ penjualan.tanggal_penjualan }}</td>
+                                                <td>
+                                                    <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#detailModal{{ penjualan.id }}">
+                                                        <i class="fa fa-book"></i>
+                                                    </button>
+                                                    <a href="{% url 'update_status' penjualan.id %}" class="btn btn-warning btn-sm">Selesai</a>
+                                                    <a href="{% url 'delete_penjualan' penjualan.id %}" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></a>
+                                                    <a href="{% url 'cetak_struk' penjualan.id %}" class="btn btn-success btn-sm" target="_blank" rel="noopener noreferrer"><i class="fa fa-print"></i></a>
+                                                </td>
+                                            </tr>
+                                        {% empty %}
+                                            <tr>
+                                                <td colspan="7" align="center">Data Kosong</td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="pagination">
+                        <span class="step-links">
+                            {% if penjualan_list.has_previous %}
+                                <a href="?page=1{% if query %}&q={{ query }}{% endif %}{% if bulan %}&bulan={{ bulan }}{% endif %}">&laquo; first</a>
+                                <a href="?page={{ penjualan_list.previous_page_number }}{% if query %}&q={{ query }}{% endif %}{% if bulan %}&bulan={{ bulan }}{% endif %}">previous</a>
+                            {% endif %}
+
+                            <span class="current">
+                                Halaman {{ penjualan_list.number }} dari {{ penjualan_list.paginator.num_pages }}.
+                            </span>
+
+                            {% if penjualan_list.has_next %}
+                                <a href="?page={{ penjualan_list.next_page_number }}{% if query %}&q={{ query }}{% endif %}{% if bulan %}&bulan={{ bulan }}{% endif %}">next</a>
+                                <a href="?page={{ penjualan_list.paginator.num_pages }}{% if query %}&q={{ query }}{% endif %}{% if bulan %}&bulan={{ bulan }}{% endif %}">last &raquo;</a>
+                            {% endif %}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+{% for penjualan in penjualan_list %}
+<div class="modal fade" id="detailModal{{ penjualan.id }}" tabindex="-1" role="dialog" aria-labelledby="detailModalLabel{{ penjualan.id }}" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="detailModalLabel{{ penjualan.id }}">Detail Transaksi Penjualan</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>No.</th>
+                            <th>Produk</th>
+                            <th>Jumlah</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for detail in penjualan.detail_penjualans.all %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>{{ detail.produk.nama_produk }}</td>
+                            <td>{{ detail.jumlah }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+
+{% endblock %}

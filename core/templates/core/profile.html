@@ -1,0 +1,25 @@
+<!-- core/templates/core/profile.html -->
+
+{% extends 'core/base.html' %}
+
+{% block title %}
+    Profile
+{% endblock %}
+
+{% block content %}
+    <div class="row justify-content-center mt-5">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">Profile</div>
+                <div class="card-body">
+                    <p>Welcome, {{ user.username }}</p>
+                </div>
+                <form action="{% url 'logout' %}" method="post" style="display: inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="nav-link btn btn-link" style="background:none; border:none; padding:0; margin:0;">Logout</button>
+                </form>
+                
+            </div>
+        </div>
+    </div>
+{% endblock %}

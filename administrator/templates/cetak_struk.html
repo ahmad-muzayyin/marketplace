@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Struk Transaksi Penjualan</title>
+    <style>
+        /* Stylesheet untuk struk cetak */
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            width: 300px;
+            margin: 0 auto;
+        }
+        h2 {
+            text-align: center;
+        }
+        .detail {
+            margin-top: 20px;
+        }
+        .detail table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .detail th, .detail td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        .total {
+            margin-top: 20px;
+            text-align: right;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Struk Transaksi Penjualan</h2>
+        <div class="detail">
+            <table>
+                <tr>
+                    <th>No. Transaksi</th>
+                    <td>{{ penjualan.no_transaksi }}</td>
+                </tr>
+                <tr>
+                    <th>Pelanggan</th>
+                    <td>{{ penjualan.customer }}</td>
+                </tr>
+                <tr>
+                    <th>Tanggal</th>
+                    <td>{{ penjualan.tanggal_penjualan }}</td>
+                </tr>
+                <tr>
+                    <th>Status</th>
+                    <td>{{ penjualan.status }}</td>
+                </tr>
+                <tr>
+                   
+                    <td>
+                        <table>
+                            <tr>
+                                <th>Nama Produk</th>
+                                <th>Harga</th>
+                                <th>Jumlah</th>
+                                <th>Subtotal</th>
+                            </tr>
+                            {% for detail in penjualan.detail_penjualans.all %}
+                            <tr>
+                                <td>{{ detail.produk.nama_produk }}</td>
+                                <td>{{ detail.produk.harga_jual }}</td>
+                                <td>{{ detail.jumlah }}</td>
+                                <td>{{ detail.produk.harga_jual }} * {{ detail.jumlah }}</td>  <!-- Display multiplication expression -->
+                            </tr>
+                            {% endfor %}
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div class="total">
+            <p>Total Transaksi: {{ penjualan.total_transaksi }}</p>
+        </div>
+    </div>
+    <script>
+        // Otomatis panggil fungsi print ketika halaman dimuat
+        window.onload = function() {
+            window.print();
+        };
+    </script>
+</body>
+</html>

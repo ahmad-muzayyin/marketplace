@@ -1,0 +1,70 @@
+<ul>      
+    
+    <li class="menu-title">
+            {% if username %}
+            <p>Welcome, {{ username }}!</p>
+        {% else %}
+            <p>Welcome, Guest!</p>
+        {% endif %}
+    </li>
+        {% comment %} {% if menu == "berandaadmin" %} active {% endif %} {% endcomment %}
+   
+        <li class="{% if menu == "berandaadmin" %} active {% endif %}">
+            <a href="{% url 'berandaadmin' %}"><i class="fa fa-dashboard"></i> <span>Beranda</span></a>
+        </li>
+        <li class="">
+            <a href=""></i> <span>Data Master</span></a>
+        </li>
+        <li class="{% if menu == "datakategori" %} active {% endif %}">
+            <a href="{% url 'kategoriadmin' %}"><i class="fa fa-book"></i> <span>Kategori</span></a>
+        </li>
+        <li class="{% if menu == "dataproduk" %} active {% endif %}">
+            <a href="{% url 'produkadmin' %}"><i class="fa fa-id-card"></i> <span>Produk</span></a>
+        </li>
+        <li class="{% if menu == "datacustomer" %} active {% endif %}">
+            <a href="{% url 'customeradmin' %}"><i class="fa fa-users"></i> <span>Outlet</span></a>
+        </li>
+        <li class="">
+            <a href=""></i> <span>Transaksi</span></a>
+        </li>
+       
+        <li class="{% if menu == "datapenjualan" %} active {% endif %}">
+            <a href="{% url 'penjualanadmin' %}"><i class="fa fa-briefcase  "></i> <span>Data Penjualan</span></a>
+        </li>
+        <li class="{% if menu == "tambahpembelian" %} active {% endif %}">
+            <a href="{% url 'tambah_pembelian' %}"><i class="fa fa-briefcase  "></i> <span>Pembelian</span></a>
+        </li>
+        <li class="{% if menu == "datapembelian" %} active {% endif %}">
+            <a href="{% url 'pembelianadmin' %}"><i class="fa fa-briefcase  "></i> <span>Data Pembelian</span></a>
+        </li>
+        <li class="">
+            <a href=""></i> <span>Analisa</span></a>
+        </li>
+        <li class="{% if menu == "regresilinear" %} active {% endif %}">
+            <a href="{% url 'regresilinear' %}"><i class="fa fa-briefcase  "></i> <span>Regresi Linear</span></a>
+        </li>
+        {% comment %} <li class="{% if menu == "kriteria_permohonanadmin" %} active {% endif %}">
+            <a href="{% url 'kriteria_permohonanadmin' %}"><i class="fa fa-pencil-square-o "></i> <span>Kriteria Permohonan</span></a>
+        </li>
+        <li class="{% if menu == "permohonanadmin" %} active {% endif %}">
+            <a href="{% url 'data_permohonanadmin' %}"><i class="fa fa-file-text"></i> <span>Data Permohonan</span></a>
+        </li>
+        <li class="{% if menu == "detail_kriteriaadmin" %} active {% endif %}">
+            <a href="{% url 'data_detail_kriteriaadmin' %}"><i class="fa fa-file-text"></i> <span>setting data kriteria</span></a>
+        </li>
+        <li class="{% if menu == "grafikadmin" %} active {% endif %}">
+            <a href="{% url 'grafik_permohonan_page' %}"><i class="fa fa-bar-chart "></i> <span>Grafik</span></a>
+        </li>
+        <li class="{% if menu == "laporanadmin" %} active {% endif %}">
+            <a href="{% url 'laporan_permohonan' %}"><i class="fa fa-paragraph"></i> <span>Laporan</span></a>
+        </li>
+ {% endcomment %}
+
+    
+
+
+
+    
+
+
+</ul>                   

@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12 col-md-12 col-lg-12 col-xl-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title d-inline-block"></h4> 
+                    </div>
+                    <div class="card-block">
+                        <div class="col-md-12">    
+                          
+                            <div class="card-body table-responsive p-0 ">
+                                <table class="table table-hover text-nowrap table-sm text-xsmall" style="font-size: 12px;">
+                                    <thead>
+                                        <tr>
+                                            <th>Produk</th>
+                                           <th>Januari</th>
+                                            <th>Februari</th>
+                                            <th>Maret</th>
+                                            <th>April</th>
+                                            <th>Mei</th>
+                                            <th>Juni</th>
+                                            <th>Juli</th>
+                                            <th>Agustus</th>
+                                            <th>September</th>
+                                            <th>Oktober</th>
+                                            <th>November</th>
+                                            <th>Desember</th>
+
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for product_name, sales in array_data_penjualan.items %}
+                                        <tr>
+                                            <td>{{ product_name }}</td>
+                                            {% for sale in sales %}
+                                            <td>{{ sale }}</td>
+                                            {% endfor %}
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            <h2>Prediksi Regresi Linear Persediaan Bulan Depan</h2>
+                            <div class="card-body table-responsive p-0 ">
+                            <table class="table table-hover text-nowrap table-sm text-xsmall" style="font-size: 12px;">
+                                    <thead>
+                                        <tr>
+                                            <th>Produk</th>
+                                            <th>Prediksi Persediaan</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for prediction in tabel_prediksi %}
+                                        <tr>
+                                            <td>{{ prediction.produk }}</td>
+                                            <td>{{ prediction.prediksi_penjualan }}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

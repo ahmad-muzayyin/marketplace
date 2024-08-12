@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<div class="content">
+    <div class="row">
+        <div class="col-12 col-md-12 col-lg-12 col-xl-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title d-inline-block">{{judul}}</h4>
+                </div>
+                <div class="card-block">
+                    <center><h5>Apakah Anda yakin ingin menghapus kategori <b>"{{ kategori.nama }}"</b> ?</h5></center>
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        <div class="text-center" mt="3">
+                            <button type="submit" class="btn btn-primary"><i class="fa fa-trash-o"></i> Hapus</button>
+                            <a href="{% url 'kategoriadmin' %}" class="btn btn-danger"><i class="fa fa-backward"></i> KEMBALI</a>
+                        </div>
+                    </form>
+                    <br/>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

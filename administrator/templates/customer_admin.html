@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<div class="content">
+    <div class="row">
+        <div class="col-12 col-md-12 col-lg-12 col-xl-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title d-inline-block">{{ judul }}</h4> 
+                    <a href="{% url 'create_customer' %}" class="btn btn-primary float-right">Tambah Outlet</a>
+                </div>
+                <div class="card-block">
+                    <div class="col-md-12">
+                    <form method="GET">
+                        <div class="form-row">
+                            <div class="form-group col-md-4">
+                                <input type="text" class="form-control" name="nama_customer" placeholder="Cari berdasarkan nama Outlet">
+                            </div>
+                            <div class="form-group col-md-4">
+                                <button type="submit" class="btn btn-primary">Cari</button>
+                            </div>
+                        </div>
+                    </form>
+                    <div class="card-body table-responsive p-0 ">
+                        <table class="table table-hover text-nowrap table-sm text-xsmall" style="font-size: 12px;">
+                            <thead>
+                                <tr>
+                                    <th><center>No</center></th>
+                                    <th>Nama Outlet</th>
+                                    <th>Alamat Outlet</th>
+                                    <th>Telepon Outlet</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for customer in customers %}
+                                    <tr>
+                                        <td><center>{{ forloop.counter }}</center></td>
+                                        <td>{{ customer.name }}</td>
+                                        <td>{{ customer.address }}</td>
+                                        <td>{{ customer.phone }}</td>
+                                        <td>
+                                            <a href="{% url 'update_customer' customer.id %}" class="btn btn-warning btn-sm"><i class="fa fa-edit"></i></a>
+                                            <a href="{% url 'delete_customer' customer.id %}" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></a>
+                                        </td>
+                                    </tr>
+                                {% empty %}
+                                    <tr>
+                                        <td colspan="5" align="center">Data Kosong</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="pagination">
+                        <span class="step-links">
+                            {% if customers.has_previous %}
+                                <a href="?page=1">&laquo; first</a>
+                                <a href="?page={{ customers.previous_page_number }}">previous</a>
+                            {% endif %}
+
+                            <span class="current">
+                                Halaman {{ customers.number }} dari {{ customers.paginator.num_pages }}.
+                            </span>
+
+                            {% if customers.has_next %}
+                                <a href="?page={{ customers.next_page_number }}">next</a>
+                                <a href="?page={{ customers.paginator.num_pages }}">last &raquo;</a>
+                            {% endif %}
+                        </span>
+                    </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

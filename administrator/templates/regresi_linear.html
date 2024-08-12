@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prediksi Jumlah Penjualan</title>
+</head>
+<body>
+    <h1>Data Penjualan dan Prediksi</h1>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Bulan</th>
+                <th>Total Penjualan</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in data_penjualan %}
+            <tr>
+                <td>{{ item.bulan }}</td>
+                <td>{{ item.total_penjualan }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <h2>Prediksi Jumlah Penjualan Bulan Selanjutnya</h2>
+    <p>Berdasarkan analisis regresi linear, jumlah penjualan pada bulan selanjutnya diperkirakan sebesar: {{ prediksi }}</p>
+</body>
+</html>
+
+{% endblock content %}

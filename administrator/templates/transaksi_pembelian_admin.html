@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container-fluid">
+    <h2>Data Pembelian</h2>
+    <form method="GET">
+        {% comment %} {{ query }} {% endcomment %}
+        <div class="form-group col-md-4">
+            <input type="text" name="q"  class="form-control" placeholder="Cari nomor transaksi" value="{{ query|default:'' }}">
+        </div>
+        <div class="form-group col-md-4">
+            <input type="month" class="form-control"  class="form-control" name="bulan" value="{{ bulan|default:'' }}">
+        </div>
+        <div class="form-group col-md-4">
+            <button type="submit" class="btn btn-primary">Cari</button>
+        </div>
+    </form>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>No. Transaksi</th>
+                <th>Supplier</th>
+                <th>Tanggal Kulakan</th>
+                {% comment %} <th>Total Belanja</th> {% endcomment %}
+                <th>Aksi</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for pembelian in pembelian_list %}
+            <tr>
+                <td>{{ pembelian.no_transaksi }}</td>
+                <td>{{ pembelian.nama_suplayer }}</td>
+                <td>{{ pembelian.tanggal_kulakan }}</td>
+                {% comment %} <td>{{ pembelian.total_transaksi }}</td> {% endcomment %}
+                <td>
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#detailModal{{ pembelian.id }}">
+                        Detail
+                    </button>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% if pembelian_list.has_other_pages %}
+    <ul class="pagination">
+        {% if pembelian_list.has_previous %}
+        <li><a href="?page=1">&laquo;</a></li>
+        <li><a href="?page={{ pembelian_list.previous_page_number }}">{{ pembelian_list.previous_page_number }}</a></li>
+        {% endif %}
+        <li class="active"><a href="?page={{ pembelian_list.number }}">{{ pembelian_list.number }}</a></li>
+        {% if pembelian_list.has_next %}
+        <li><a href="?page={{ pembelian_list.next_page_number }}">{{ pembelian_list.next_page_number }}</a></li>
+        <li><a href="?page={{ pembelian_list.paginator.num_pages }}">&raquo;</a></li>
+        {% endif %}
+    </ul>
+    {% endif %}
+
+    {% for pembelian in pembelian_list %}
+    <div class="modal fade" id="detailModal{{ pembelian.id }}" tabindex="-1" role="dialog" aria-labelledby="detailModalLabel{{ pembelian.id }}" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="detailModalLabel{{ pembelian.id }}">Detail Transaksi Pembelian</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    {% comment %} <h5>Detail Transaksi Pembelian</h5> {% endcomment %}
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>No.</th>
+                                <th>Produk</th>
+                                <th>Jumlah</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for detail in pembelian.detail_pembelians.all %}
+                            <tr>
+                                <td>{{ forloop.counter }}</td>
+                                <td>{{ detail.produk.nama_produk }}</td>
+                                <td>{{ detail.jumlah }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+
+{% endblock %}

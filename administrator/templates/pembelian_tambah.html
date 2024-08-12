@@ -1,0 +1,197 @@
+
+
+
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<div class="container-fluid" >
+    <form id="pembelian_form" action="{% url 'simpan_pembelian' %}" method="post">
+        {% csrf_token %}
+        <div class="card" style="margin-bottom:6px;">
+            <div class="body" style="padding:15px 25px;margin-bottom:-10px;" >
+                <div class="row clearfix">
+                    <div class="col-md-2" >
+                        <div class="form-line" style="margin-bottom:20px;">
+                            <label for="no_transaksi">Nomor Transaksi</label><br>
+<input type="text" id="no_transaksi" name="no_transaksi" value="{{ nomor_transaksi }}" style="font-weight: bold" class="form-control form-control-sm form-control form-control-sm-sm bg-info" readonly><br><br>
+
+                       
+                        </div>
+
+                    </div>
+                    <div class="col-md-3" >
+                        <div class="form-line" style="margin-bottom:8px;">
+                            <label for="no_transaksi">Suplayer</label><br>
+                            <input type="text" id="nama_suplayer" name="nama_suplayer" class="form-control form-control-sm" required>
+                        </div>
+                       
+                    </div>
+                   
+                    <div class="col-md-3" >
+                        
+
+                        <div class="body" id="data_pencarianbarcode_header">
+                            <div class="form-group row">
+                                <div class="col-sm-10">
+                                    <label for="no_transaksi">Tanggal</label><br>
+                                     <input type="date" id="tanggal_kulakan" name="tanggal_kulakan" class="form-control form-control-sm"  style="font-size:15px;font-weight: bold; height:40px;" required>
+                                </div>
+                            </div> 
+                        </div> 
+                        
+                    </div>
+                    
+                </div>
+               
+            </div>
+        </div>
+        <div class="card" style="margin-bottom:6px;">
+           
+            <div class="body" style="padding:15px 25px;height:300px;overflow:auto;">
+            
+                <table class="table table-sm table-hover" id="detail_pembelian">
+                    <thead class="small">
+                        <tr class="text-center">
+                            <th>Produk</th>
+                            <th>Harga Beli</th>
+                            <th>Jumlah</th>
+                            <th>Sub Total</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr id="row_1">
+                            <td>
+                                <select name="produk_1" onchange="setHargaBeli(this)" class="form-control form-control-sm">
+                                    <option value="">Pilih Produk</option>
+                                    {% for produk in produk_list %}
+                                        <option value="{{ produk.id }}" data-harga="{{ produk.harga_beli }}">{{ produk.nama_produk }}</option>
+                                    {% endfor %}
+                                </select>
+                            </td>
+                            <td><input type="text" name="harga_beli_1" id="harga_beli_1" readonly class="form-control form-control-sm"></td>
+                            <td><input type="number" name="jumlah_1" id="jumlah_1" min="1" onkeyup="hitungSubTotal(1)" class="form-control form-control-sm"></td>
+                            <td><input type="text" name="sub_total_1" id="sub_total_1" readonly class="form-control form-control-sm"></td>
+                            <td><button type="button" onclick="deleteRow(1)" class="form-control form-control-sm">Hapus</button></td>
+                        </tr>
+                        <!-- Tambahkan baris tambahan sesuai kebutuhan -->
+                    </tbody>
+                </table>
+                 <button type="button" onclick="addRow()">Tambah Baris</button>
+            </div>
+        </div>
+
+        <div class="card" style="margin-bottom:6px;">
+            <div class="body" style="padding:15px 25px;margin-bottom:-10px;" id="data_pembelian_footer">
+                <div class="row clearfix">
+                    <div class="col-md-3" >
+                        <div class="form-line">
+                            <textarea rows="1" readonly class="form-control form-control-sm no-resize text-danger" id="total" name="total"  style="font-size:25px; font-weight: bold;">Total Pembelian </textarea>
+                        </div>
+                    </div>
+
+                    <div class="col-md-2" >
+
+                        <div class="form-line" style="margin-bottom:8px;">
+                            {% comment %} <input type="text" id="total" name="total" readonly class="form-control form-control-sm"> {% endcomment %}
+                            {% comment %} <input type="text" class="form-control form-control-sm" placeholder="Bayar" name="bayar" id="bayar"  /> {% endcomment %}
+                        </div>
+                        <div class="form-line" style="margin-bottom:8px;">
+                           
+                        </div>
+                    </div>
+                    <div class="col-md-4 " >
+                        Aksi :
+                        <div class="form-line "style="margin-bottom:7px;">
+                            <button type="submit">Simpan</button>
+                            {% comment %} <button type="button" class="btn btn-info waves-effect btn-sm" onclick="simpan_kulakan()" name="aksisimpan" id="aksisimpan">Simpan Transaksi Pembelian</button> {% endcomment %}
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<script>
+    let rowNum = 1;
+
+    {% comment %} function addRow() {
+        rowNum++;
+        let table = document.getElementById('detail_pembelian').getElementsByTagName('tbody')[0];
+        let newRow = table.insertRow(table.rows.length);
+        newRow.id = "row_" + rowNum;
+        let cell1 = newRow.insertCell(0);
+        let cell2 = newRow.insertCell(1);
+        let cell3 = newRow.insertCell(2);
+        let cell4 = newRow.insertCell(3);
+        let cell5 = newRow.insertCell(4);
+        cell1.innerHTML = `<select name="produk_${rowNum}" onchange="setHargaBeli(this)" class="form-control form-control-sm">
+                            <option value="">Pilih Produk</option>
+                            {% for produk in produk_list %}
+                                <option value="{{ produk.id }}" data-harga="{{ produk.harga_beli }}">{{ produk.nama_produk }}</option>
+                            {% endfor %}
+                        </select>`;
+        cell2.innerHTML = `<input type="text" name="harga_beli_${rowNum}" id="harga_beli_${rowNum}" readonly class="form-control form-control-sm">`;
+        cell3.innerHTML = `<input type="number" name="jumlah_${rowNum}" id="jumlah_${rowNum}" min="1" onkeyup="hitungSubTotal(${rowNum})" class="form-control form-control-sm">`;
+        cell4.innerHTML = `<input type="text" name="sub_total_${rowNum}" id="sub_total_${rowNum}" readonly class="form-control form-control-sm">`;
+        cell5.innerHTML = `<button type="button" onclick="deleteRow(${rowNum})" class="form-control form-control-sm">Hapus</button>`;
+    } {% endcomment %}
+    function addRow() {
+        rowNum++;
+        let table = document.getElementById('detail_pembelian').getElementsByTagName('tbody')[0];
+        let newRow = table.insertRow(table.rows.length);
+        newRow.id = "row_" + rowNum;
+        let cell1 = newRow.insertCell(0);
+        let cell2 = newRow.insertCell(1);
+        let cell3 = newRow.insertCell(2);
+        let cell4 = newRow.insertCell(3);
+        let cell5 = newRow.insertCell(4);
+        cell1.innerHTML = `<select name="produk_${rowNum}" onchange="setHargaBeli(this)" class="form-control form-control-sm">
+                            <option value="">Pilih Produk</option>
+                            {% for produk in produk_list %}
+                                <option value="{{ produk.id }}" data-harga="{{ produk.harga_beli }}">{{ produk.nama_produk }}</option>
+                            {% endfor %}
+                        </select>`;
+        cell2.innerHTML = `<input type="text" name="harga_beli_${rowNum}" id="harga_beli_${rowNum}" readonly class="form-control form-control-sm">`;
+        cell3.innerHTML = `<input type="number" name="jumlah_${rowNum}" id="jumlah_${rowNum}" min="1" value="1" onkeyup="hitungSubTotal(${rowNum})" class="form-control form-control-sm">`;
+        cell4.innerHTML = `<input type="text" name="sub_total_${rowNum}" id="sub_total_${rowNum}" readonly class="form-control form-control-sm">`;
+        cell5.innerHTML = `<button type="button" onclick="deleteRow(${rowNum})" class="form-control form-control-sm">Hapus</button>`;
+        hitungSubTotal(rowNum); // Hitung subtotal saat menambahkan baris baru
+    }
+
+    function deleteRow(rowNum) {
+        let row = document.getElementById("row_" + rowNum);
+        row.parentNode.removeChild(row);
+        hitungTotalPembelian();
+    }
+    function setHargaBeli(select) {
+        let hargaBeliInput = select.parentNode.parentNode.cells[1].getElementsByTagName('input')[0];
+        let hargaBeli = select.options[select.selectedIndex].getAttribute('data-harga');
+        hargaBeliInput.value = hargaBeli;
+        let jumlahInput = select.parentNode.parentNode.cells[2].getElementsByTagName('input')[0];
+        jumlahInput.value = 1; // Set jumlah menjadi 1 saat memilih produk
+        hitungSubTotal(rowNum);
+    }
+
+    function hitungSubTotal(rowNum) {
+        let hargaBeli = document.getElementById("harga_beli_" + rowNum).value;
+        let jumlah = document.getElementById("jumlah_" + rowNum).value;
+        let subTotalInput = document.getElementById("sub_total_" + rowNum);
+        let subTotal = hargaBeli * jumlah;
+
+        subTotalInput.value = parseInt(subTotal);
+        hitungTotalPembelian();
+    }
+
+    function hitungTotalPembelian() {
+        let totalPembelian = 0;
+        let subTotalInputs = document.querySelectorAll('[name^="sub_total_"]');
+        subTotalInputs.forEach(input => {
+            totalPembelian += parseInt(input.value);
+        });
+        document.getElementById("total").value = totalPembelian;
+    }
+</script>
+
+{% endblock content %}

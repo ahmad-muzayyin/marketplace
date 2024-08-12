@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+
+<div class="content">
+    <div class="row">
+        <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
+            <div class="dash-widget">
+                <span class="dash-widget-bg1"><i class="fa fa-id-card" aria-hidden="true"></i></span>
+                <div class="dash-widget-info text-right">
+                    <h3>{{ jumlah_customer }}</h3>
+                    <span class="widget-title1">Outlet<i class="fa fa-check" aria-hidden="true"></i></span>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
+            <div class="dash-widget">
+                <span class="dash-widget-bg2"><i class="fa fa-id-card-o"></i></span>
+                <div class="dash-widget-info text-right">
+                    <h3>{{ jumlah_transaksi }}</h3>
+                    <span class="widget-title2">Penjualan<i class="fa fa-check" aria-hidden="true"></i></span>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
+            <div class="dash-widget">
+                <span class="dash-widget-bg3"><i class="fa fa-book" aria-hidden="true"></i></span>
+                <div class="dash-widget-info text-right">
+                    <h3>{{ jumlah_produk }}</h3>
+                    <span class="widget-title3">Produk<i class="fa fa-check" aria-hidden="true"></i></span>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
+            <div class="dash-widget">
+                <span class="dash-widget-bg4"><i class="fa fa-retweet" aria-hidden="true"></i></span>
+                <div class="dash-widget-info text-right">
+                    <h3>{{ jumlah_kategori }}</h3>
+                    <span class="widget-title4">Kategori<i class="fa fa-check" aria-hidden="true"></i></span>
+                </div>
+            </div>
+        </div>
+        {% comment %} <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
+            <div class="dash-widget">
+                <span class="dash-widget-bg1"><i class="fa fa-check-square-o" aria-hidden="true"></i></span>
+                <div class="dash-widget-info text-right">
+                    <h3></h3>
+                    <span class="widget-title1">ACC Teknisi <i class="fa fa-check" aria-hidden="true"></i></span>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
+            <div class="dash-widget">
+                <span class="dash-widget-bg2"><i class="fa fa-close" aria-hidden="true"></i></span>
+                <div class="dash-widget-info text-right">
+                    <h3></h3>
+                    <span class="widget-title2">Tolak <i class="fa fa-check" aria-hidden="true"></i></span>
+                </div>
+            </div>
+        </div> {% endcomment %}
+    </div>
+   
+</div>
+{% endblock content %}

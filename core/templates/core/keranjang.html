@@ -1,0 +1,136 @@
+{% extends 'core/base.html' %}
+
+{% block title %}
+    Keranjang
+{% endblock %}
+
+{% block content %}
+    <h1>Keranjang</h1>
+    {% if items %}
+        <table class="table" id="keranjang-table">
+            <thead>
+                <tr>
+                    <th scope="col">Produk</th>
+                    <th scope="col">Harga Jual</th>
+                    <th scope="col">Jumlah</th>
+                    <th scope="col">Subtotal</th>
+                    <th scope="col">Aksi</th> <!-- Tambahkan kolom aksi -->
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in items %}
+                <tr id="item_row_{{ item.product.id }}">
+                    <td>{{ item.product.nama_produk }}</td>
+                    <td id="harga_{{ item.product.id }}">{{ item.product.harga_jual }}</td>
+                    <td>
+                        <button class="btn btn-sm btn-danger" onclick="updateQuantity({{ item.product.id }}, -1)">-</button>
+                        <span id="jumlah_sewa_{{ item.product.id }}">{{ item.jumlah_qty }}</span>
+                        <button class="btn btn-sm btn-success" onclick="updateQuantity({{ item.product.id }}, 1)">+</button>
+                    </td>
+                    <td id="subtotal_{{ item.product.id }}">{{ item.subtotal }}</td>
+                    <td>
+                        <button class="btn btn-sm btn-danger" onclick="hapusItem({{ item.product.id }})">Hapus</button>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="4"><strong>Total Harga:</strong></td>
+                    <td><strong id="total_harga">{{ total_harga }}</strong></td>
+                </tr>
+            </tfoot>
+        </table>
+        <form id="checkout-form" method="post" action="{% url 'checkout' %}">
+            {% csrf_token %}
+            <input type="hidden" name="total_harga" value="{{ total_harga }}">
+            <button type="submit" class="btn btn-primary">Checkout</button>
+        </form>
+    {% else %}
+        <p>Keranjang belanja Anda kosong.</p>
+    {% endif %}
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            updateTotal();
+        });
+
+        function updateQuantity(productId, change) {
+            var jumlahSpan = document.getElementById('jumlah_sewa_' + productId);
+            var jumlah = parseInt(jumlahSpan.innerText);
+            jumlah += change;
+            if (jumlah < 0) {
+                jumlah = 0;
+            }
+            jumlahSpan.innerText = jumlah;
+
+            var harga = parseFloat(document.getElementById('harga_' + productId).innerText);
+            var subtotal = harga * jumlah;
+            document.getElementById('subtotal_' + productId).innerText = subtotal;
+
+            var csrfToken = getCookie('csrftoken');
+
+            updateSessionAndTotal(productId, jumlah, subtotal, csrfToken);
+        }
+
+        function hapusItem(productId) {
+            var csrfToken = getCookie('csrftoken');
+
+            // Hapus item dari sesi
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "/hapus_item/", true);
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.setRequestHeader('X-CSRFToken', csrfToken);
+            xhr.onload = function() {
+                if (xhr.status === 200) {
+                    console.log('Item berhasil dihapus');
+                    document.getElementById('item_row_' + productId).remove(); // Hapus baris item dari tabel
+                    updateTotal(); // Memperbarui total harga setelah item dihapus
+                } else {
+                    console.error('Gagal menghapus item');
+                }
+            };
+            xhr.send(JSON.stringify({ productId: productId }));
+        }
+
+        function updateSessionAndTotal(productId, jumlah, subtotal, csrfToken) {
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "/update_session/", true);
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.setRequestHeader('X-CSRFToken', csrfToken);
+            xhr.onload = function() {
+                if (xhr.status === 200) {
+                    console.log('Session berhasil diperbarui');
+                    updateTotal();
+                } else {
+                    console.error('Gagal memperbarui session');
+                }
+            };
+            xhr.send(JSON.stringify({ productId: productId, jumlah: jumlah, subtotal: subtotal }));
+        }
+
+        function updateTotal() {
+            var total = 0;
+            var subtotalElements = document.querySelectorAll('[id^="subtotal_"]');
+            subtotalElements.forEach(function(subtotalElement) {
+                total += parseFloat(subtotalElement.innerText);
+            });
+            document.getElementById('total_harga').innerText = total;
+        }
+
+        function getCookie(name) {
+            var cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+    </script>
+{% endblock %}

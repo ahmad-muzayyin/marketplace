@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<div class="content">
+    
+   
+    <div class="row">
+        <div class="col-12 col-md-12 col-lg-12 col-xl-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title d-inline-block">{{judul}}</h4> 
+                    <a href="{% url 'tambah_kategori' %}" class="btn btn-primary float-right"><i class="fa fa-send-o"></i> Tambah Data</a>
+                </div>
+                <div class="card-block">
+                    <div class="col-md-12">
+                    <div class="card-body table-responsive p-0 ">
+                        <table class="table table-hover text-nowrap table-sm text-xsmall" style="font-size: 12px;">
+                            <thead>
+                                <tr>
+                                    <th><center>No</center></th>
+                                    <th>Nama Kategori</th>
+                                   
+                                  
+                                    
+                                </tr>
+                                
+                            </thead>
+                            <tbody>
+                                {% for kategori in kategoris %}
+                                    <tr>
+                                        <td><center>{{ forloop.counter }}</center></td>
+                                        <td>{{ kategori.nama }}</td>
+                                        <td>
+                                        <a href="{% url 'edit_kategori' kategori.id %}" class="btn btn-primary btn-sm"><i class="fa fa-pencil"></i></a>
+                                       
+                                        <a href="{% url 'delete_kategori' kategori.id %}" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></a>
+                                        </td>
+                                    </tr>
+                                {% empty %}
+                                    <tr>
+                                    <td colspan="5" align="center">Data  Kosong</td>
+                                    </tr>
+                                {% endfor %} 
+                            </tbody>
+                        </table>
+                    </div>
+                     </div>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+</div>
+{% endblock content %}
